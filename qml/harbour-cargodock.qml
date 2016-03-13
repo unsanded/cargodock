@@ -82,8 +82,9 @@ ApplicationWindow
     // cloud services
     DropboxService { }
     OwnCloudService { }
-    TelekomMediencenter { }
+    TelekomMedienCenter { }
     WebDavService { }
+    SeafileService { }
     /******************************************/
 
     QtObject {

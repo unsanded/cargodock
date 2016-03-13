@@ -36,7 +36,12 @@ SOURCES += src/harbour-cargodock.cpp \
     src/pipedevice.cpp \
     src/sslhandler.cpp \
     src/authenticator.cpp \
-    src/blowfish.cpp
+    src/blowfish.cpp \
+    src/seafilemodel.cpp \
+    src/seafileapi/seafileserver.cpp \
+    src/seafileapi/seafilefile.cpp \
+    src/seafileapi/seafilerequests.cpp
+
 
 OTHER_FILES += qml/harbour-cargodock.qml \
     qml/cover/CoverPage.qml \
@@ -106,5 +111,18 @@ HEADERS += \
     src/pipedevice.h \
     src/sslhandler.h \
     src/authenticator.h \
-    src/blowfish.h
+    src/blowfish.h \
+    src/seafilemodel.h \
+    src/seafileapi/seafileserver.h \
+    src/seafileapi/seafilefile.h \
+    src/seafileapi/seafilerequests.h
+
+
+
+
+DISTFILES += \
+    qml/services/SeafileService.qml \
+    qml/services/TelekomMedienCenter.qml
+
+
 

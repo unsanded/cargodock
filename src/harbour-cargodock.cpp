@@ -19,6 +19,7 @@
 #include "foldermodel.h"
 
 #include "dropboxthumbprovider.h"
+#include "seafilemodel.h"
 
 namespace
 {
@@ -52,8 +53,11 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<DavModel>(URI, 1, 0, "DavModel");
     qmlRegisterType<DropboxModel>(URI, 1, 0, "DropboxModel");
+    qmlRegisterType<SeafileModel>(URI, 1, 0, "SeafileModel");
     qmlRegisterType<FolderModel>(URI, 1, 0, "FolderModel");
     qmlRegisterType<PlacesModel>(URI, 1, 0, "PlacesModel");
+
+    qmlRegisterType<SeafileServer>(URI, 1, 0, "SeafileServer");
 
     DropboxThumbProvider* dropBoxThumbProvider = new DropboxThumbProvider;
     view->engine()->addImageProvider("dropbox", dropBoxThumbProvider);
