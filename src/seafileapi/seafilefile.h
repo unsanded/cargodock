@@ -20,27 +20,26 @@ public:
     int     size;
     SeafileLibrary* library;
     QSharedPointer<SeafileFile> parent;
+
+    QString m_path;
     virtual QString path(){
-        return parent->path() + '/' + name;
+        return m_path;
+        //return parent->path() + '/' + name;
     }
     virtual ~SeafileFile(){}
 };
 
 struct SeafileFolder: public SeafileFile{
-    QList<QSharedPointer<SeafileFile> > contents;
+    QString id;
+    QList< QSharedPointer<SeafileFile> > contents;
 };
 
 struct SeafileLibrary: public SeafileFolder{
     QString owner;
     QString description;
-    QString id;
-
-    // SeafileFile interface
 public:
-    virtual QString path()
-    {
-        return '/' + name;
-    }
+    //virtual QString path()
+    //{ return '/' + name; }
 };
 
 #endif // SEAFILEFILE_H

@@ -29,6 +29,7 @@ public:
 signals:
     void gotFile(const QByteArray& path, QSharedPointer<SeafileFile> file);
     void done();
+    void authenticationFailed();
 
 protected:
     QNetworkReply* reply;
@@ -97,6 +98,23 @@ public slots:
     virtual void onResponse() override;
 protected:
     QByteArray m_path;
+};
+
+/**
+ * @brief The SeafileFileRequest struct request any kind of action that has to do with a single file. eg. move/delete
+ */
+struct SeafileFileRequest: public SeafileLibraryRequest {
+    SeafileFileRequest(SeafileServer* server, QByteArray repo, QByteArray path, const char* operation):
+        SeafileLibraryRequest(server, repo, "file/")
+    {
+        QUrl u = this->url();
+        u.setQuery(
+                    "p=" + path +
+                    "&operation=" + operation
+                  );
+        setUrl(u);
+    }
+    Q_OBJECT
 };
 
 

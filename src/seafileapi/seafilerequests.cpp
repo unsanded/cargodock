@@ -51,7 +51,10 @@ void SeafileLoadLibrariesRequest::onResponse()
     {
         QJsonObject libraryObject (val.toObject());
         QSharedPointer<SeafileFile> lib(seafileFileFromJson(libraryObject));
-        emit gotFile("/", lib);
+
+        // libraries have an empty path.
+        lib->m_path = "";
+        emit gotFile("", lib);
     }
     emit done();
 }
@@ -66,7 +69,8 @@ void SeafileLoadDirectoryRequest::onResponse()
     {
         QJsonObject libraryObject (val.toObject());
         QSharedPointer<SeafileFile> lib(seafileFileFromJson(libraryObject));
-        emit gotFile("/", lib);
+        lib->m_path = this->m_path;
+        emit gotFile(m_path, lib);
     }
     emit done();
 }

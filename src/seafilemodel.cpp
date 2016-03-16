@@ -26,27 +26,28 @@ void SeafileModel::authenticate(QString username, QString password)
 
 void SeafileModel::onFile(QSharedPointer<SeafileFile> file)
 {
-    if(true){ //file->parent->path() == currentPath){
-        Item::Ptr item ( new Item);
-        if(file->isRepo){
-            QSharedPointer<SeafileLibrary> lib (qSharedPointerCast<SeafileLibrary>(file));
-            item->name = lib->id;
+    Item::Ptr item ( new Item);
+    if(file->isRepo){
+        QSharedPointer<SeafileLibrary> lib (qSharedPointerCast<SeafileLibrary>(file));
+        item->name = lib->id;
+        if (!m_libraries.contains(lib->id)) {
+            m_libraries.insert(lib->id, lib);
+            qDebug() << "Adding library" << lib->id << lib->name;
         }
-        else
-        {
-            item->name = file->name;
-        }
-        if(file->isDir)
-        {
-            item->type = Folder;
-        }
-        else
-        {
-            item->type = File;
-        }
-        item->friendlyName = file->name;
-        item->path = currentPath;
+    } else {
+        item->name = file->name;
+    }
+
+    if(file->isDir) {
+        item->type = Folder;
+    } else {
+        item->type = File;
+    }
+    item->friendlyName = file->name;
+    if(file->path() == currentPath){
         appendItem(item);
+    } else {
+        qWarning () << "ignoring file outside current dir: "  <<  file->path();
     }
 }
 
@@ -57,7 +58,6 @@ void SeafileModel::onLoadFinished()
 
 void SeafileModel::loadDirectory(const QString &path)
 {
-    currentPath = path;
     QStringList pathList = path.split('/', QString::SkipEmptyParts);
     clearItems();
     setLoading(true);
@@ -65,12 +65,14 @@ void SeafileModel::loadDirectory(const QString &path)
     if (pathList.isEmpty()){
         // this is a request for the root. ie. the list of libraries.
         server()->loadLibraries();
+        this->currentPath="";
     }
     else
     {
         QByteArray library = pathList.takeFirst().toUtf8();
         QByteArray newPath = pathList.join('/').toUtf8() + '/';
         server()->loadDirectory(library, newPath);
+        this->currentPath = newPath;
     }
 }
 
@@ -102,6 +104,29 @@ void SeafileModel::init()
 QVariant SeafileModel::data(const QModelIndex &index, int role) const
 {
     return FolderBase::data(index, role);
+}
+
+QString SeafileModel::friendlyBasename(const QString &path) const
+{
+    QStringList pathList(path.split('/', QString::SkipEmptyParts));
+
+    if(pathList.isEmpty()){
+        // it is the root.
+        return "<b>sea</b>file";
+    }
+    if(pathList.length()==1){
+        // it is a repo.
+        if(m_libraries.contains(pathList[0])){
+            return m_libraries[pathList[0]]->name;
+        }
+        else
+        {
+            return "[library name unknown]";
+        }
+    } else {
+        // it is a foder of a file: It has no special name.
+        return basename(path);
+    }
 }
 
 

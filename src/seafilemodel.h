@@ -37,6 +37,7 @@ protected:
     // FolderBase interface
 protected:
     virtual void init() override;
+
     void setLoading(bool value){
         if(this->m_isLoading == value) return;
         this->m_isLoading = value;
@@ -67,10 +68,15 @@ protected:
 private:
     bool m_isLoading;
     QString currentPath;
+    QMap< QString, QSharedPointer<SeafileLibrary> > m_libraries;
 
     // QAbstractItemModel interface
 public:
     virtual QVariant data(const QModelIndex &index, int role) const;
+
+    // FolderBase interface
+public:
+    virtual QString friendlyBasename(const QString &path) const;
 };
 
 
